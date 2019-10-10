@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../views/product_detail_screen.dart';
 import '../providers/product.dart';
+import '../providers/cart.dart';
 class ProductItem extends StatelessWidget {
-//  final String id;
-//  final String title;
-//  final String imageUrl;
-//
-//  //positional arguments
-//  ProductItem(this.id, this.title, this.imageUrl);
-  
+
   @override
   Widget build(BuildContext context) {
+
     final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context, listen: false);
+
     print('product rebuilds');
     //rounded corners wrapper
     return ClipRRect(
@@ -38,7 +36,9 @@ class ProductItem extends StatelessWidget {
             ),
             trailing: IconButton(
               icon: Icon(Icons.shopping_basket,color: Theme.of(context).accentColor,),
-              onPressed: () => {},
+              onPressed: () {
+                cart.addItem(product.id, product.price, product.title);
+              },
             ),
             title: Text(product.title, textAlign: TextAlign.center),
           ),
