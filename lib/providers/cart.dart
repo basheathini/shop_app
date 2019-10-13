@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 class CartItem{
   final String id;
@@ -39,6 +41,32 @@ class Cart with ChangeNotifier{
       ));
     }else{
       _items.putIfAbsent(productId, () => CartItem(id: DateTime.now().toString(),title: title, price: price, quantity: 1));
+    }
+    notifyListeners();
+  }
+
+  void removeItem(String productId){
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  void clearItems(){
+    _items = {};
+    notifyListeners();
+  }
+  void removeSingleItem(String productId){
+    if(!_items.containsKey(productId)){
+      return;
+    }
+    if(_items[productId].quantity > 1){
+      items.update(productId, (existingCartItem) => CartItem(
+          id: existingCartItem.id,
+          title: existingCartItem.title,
+          price: existingCartItem.price,
+          quantity: existingCartItem.quantity -1
+      ));
+    }else{
+      _items.remove(productId);
     }
     notifyListeners();
   }
