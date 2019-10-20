@@ -41,14 +41,9 @@ class ProductDetailScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,),
             )
-
-
-
           ],
         ),
-
       )
     );
-
   }
 }
