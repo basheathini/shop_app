@@ -23,6 +23,7 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
   );
 
   var _isInit = true;
+  var _isLoading = false;
 
   var _initValues = {
     'title': '',
@@ -93,18 +94,37 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
 
   void _saveForm(){
     final isValid = _form.currentState.validate();
+
+    setState(() {
+      _isLoading = true;
+    });
+
     if(!isValid){
       return;
     }
     _form.currentState.save();
     if(_editedProduct.id != null){
       Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
-      
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     }else{
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct).catchError((error) {
+        return showDialog(context: context, builder: (cont) => AlertDialog(title: Text('An error occurred!'), content: Text('Something went wrong.') , actions: <Widget>[
+          FlatButton(child: Text('Okay'), onPressed: (){
+            Navigator.of(context).pop();
+          } ,)
+        ],));
+      }).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
     }
 
-    Navigator.of(context).pop();
+
 
     print(_editedProduct.title);
     print(_editedProduct.description);
@@ -125,7 +145,7 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
           )
         ],
       ),
-      body: Padding(
+      body: _isLoading ? Center(child: CircularProgressIndicator(),) : Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _form,
