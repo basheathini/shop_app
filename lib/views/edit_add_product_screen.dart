@@ -95,13 +95,15 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
   void _saveForm(){
     final isValid = _form.currentState.validate();
 
-    setState(() {
-      _isLoading = true;
-    });
+
 
     if(!isValid){
       return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
     _form.currentState.save();
     if(_editedProduct.id != null){
       Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
@@ -123,13 +125,6 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
         Navigator.of(context).pop();
       });
     }
-
-
-
-    print(_editedProduct.title);
-    print(_editedProduct.description);
-    print(_editedProduct.price);
-    print(_editedProduct.imageUrl);
 
   }
 

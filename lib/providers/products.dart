@@ -75,10 +75,15 @@ class Products with ChangeNotifier{
       _items.add(newProduct);
       //_items.insert(0, newProduct); //at the begin of the list
       notifyListeners();
-    }).catchError((error){
-      print(error);
-      throw error;
+    }).catchError((onError){
+      print(onError);
+      throw onError;
+
     });
+//        .catchError((error){
+//      print(error);
+//      throw error;
+//    });
   }
 
   Product findById(String id){
