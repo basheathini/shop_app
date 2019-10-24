@@ -20,6 +20,37 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>{
   var _showOnlyFavorites = false;
+  var _isInit = true;
+  var _isLoading = false;
+
+  //runs once before everything runs.
+  @override
+  void initState() {
+    //Provider.of<Products>(context).fetchProducts(); won't work because we need the context and it is not fully loaded.
+
+    //Future is a hack that kind of delays the execution of getting products so that the context can be available
+//    Future.delayed(Duration.zero).then((_) {
+//      Provider.of<Products>(context).fetchProducts();
+//    });
+    super.initState();
+  }
+
+  //gets executed often, so we need a way to check if its been ran.
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchProducts().then((_){
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final productsContainer = Provider.of<Products>(context, listen: false);
@@ -68,7 +99,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>{
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading ? Center(child: CircularProgressIndicator()) : ProductsGrid(_showOnlyFavorites),
     );
   }
 
