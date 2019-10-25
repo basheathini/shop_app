@@ -111,10 +111,20 @@ class Products with ChangeNotifier{
   Product findById(String id){
     return _items.firstWhere((product) => product.id == id);
   }
-  void updateProduct(String id, Product newProduct){
+
+
+  Future<void> updateProduct(String id, Product newProduct) async{
+
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
 
     if(prodIndex >= 0){
+      final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id.json";
+      await http.patch(url, body: json.encode({
+        'title': newProduct.title,
+        'description': newProduct.description,
+        'imageUrl' : newProduct.imageUrl,
+        'price': newProduct.price
+      }));
       _items[prodIndex] = newProduct;
       notifyListeners();
     }else{
@@ -124,6 +134,16 @@ class Products with ChangeNotifier{
   }
 
   void deleteProduct(String id){
+    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id";
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
+    http.delete(url).then((_){
+      existingProduct = null;
+    }).catchError((_){
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
     _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
