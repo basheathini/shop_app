@@ -9,6 +9,9 @@ import 'providers/orders.dart';
 import 'views/orders_screen.dart';
 import 'views/user_product_screen.dart';
 import 'views/edit_add_product_screen.dart';
+import 'views/auth-screen.dart';
+import 'providers/auth.dart';
+import 'views/products_overview_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,15 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(
-            value: Products()
-          ),
-          ChangeNotifierProvider.value(
-            value: Cart(),
-          ),
-          ChangeNotifierProvider.value(
-              value: Orders()
-          )
+          ChangeNotifierProvider.value(value: Auth()),
+          ChangeNotifierProvider.value(value: Products()),
+          ChangeNotifierProvider.value(value: Cart()),
+          ChangeNotifierProvider.value(value: Orders())
 //      builder: (con) => Products(),
         ],
       child:  MaterialApp(
@@ -37,14 +35,15 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Lato'
         ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
-        home: ProductsOverviewScreen(),
+        home: AuthScreen(),
         debugShowCheckedModeBanner: false,
         routes: {
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrdersScreen.routeName: (context) => OrdersScreen(),
           UserProductScreen.routeName: (context) => UserProductScreen(),
-          EditAddProductScreen.routeName: (context) => EditAddProductScreen()
+          EditAddProductScreen.routeName: (context) => EditAddProductScreen(),
+          ProductsOverviewScreen.routeName: (context) => ProductsOverviewScreen()
         },
       ),
     );
