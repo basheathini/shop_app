@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../views/orders_screen.dart';
 import '../views/user_product_screen.dart';
+import '../providers/auth.dart';
+import 'package:provider/provider.dart';
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -50,31 +52,35 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
             },
           ),
+//          Divider(),
+//          ListTile(
+//            leading: Icon(
+//                Icons.history
+//            ),
+//            title: Text('History'),
+//            onTap: (){
+//              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
+//            },
+//          ),
+//          Divider(),
+//          ListTile(
+//            leading: Icon(
+//                Icons.trending_up
+//            ),
+//            title: Text('Promo'),
+//            onTap: (){
+//              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
+//            },
+//          ),
           Divider(),
           ListTile(
-            leading: Icon(
-                Icons.history
-            ),
-            title: Text('History'),
-            onTap: (){
-              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
-            },
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(
-                Icons.trending_up
-            ),
-            title: Text('Promo'),
-            onTap: (){
-              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
-            },
-          ),
-          Divider(),
-          ListTile(
+            leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: (){
-              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+              Provider.of<Auth>(context, listen: false).signOut();
+              //Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
             },
           )
         ],

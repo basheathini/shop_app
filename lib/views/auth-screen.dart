@@ -123,7 +123,9 @@ class _AuthCardState extends State<AuthCard> {
         // Sign user up
         await Provider.of<Auth>(context, listen: false)
             .signUp(_authData['email'], _authData['password']);
-        Navigator.of(context).pushReplacementNamed('/products-overview');
+
+
+        //Navigator.of(context).pushReplacementNamed('/products-overview');
 
       }
 
@@ -201,7 +203,7 @@ class _AuthCardState extends State<AuthCard> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Username or Email'),
+                  decoration: InputDecoration(labelText: 'Username'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
@@ -244,17 +246,20 @@ class _AuthCardState extends State<AuthCard> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
-                    child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                  Container(
+                    width: deviceSize.width * 0.75,
+                    child: RaisedButton(
+                      child:
+                      Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                      onPressed: _submit,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                      color: Theme.of(context).primaryColor,
+                      textColor: Theme.of(context).primaryTextTheme.button.color,
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                 FlatButton(
                   child: Text(

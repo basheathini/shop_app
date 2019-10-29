@@ -297,14 +297,14 @@ class _EditAddProductScreenState extends State<EditAddProductScreen> {
                           return 'Please enter an image url';
                         }
 
-                        if(!value.startsWith('http') || !value.startsWith('https')){
-                          return 'Please enter a valid URL';
-
-                        }
-                        
-                        if(!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
-                          return 'This is not a valid image';
-                        }
+//                        if(!value.startsWith('http') || !value.startsWith('https')){
+//                          return 'Please enter a valid URL';
+//
+//                        }
+//
+//                        if(!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
+//                          return 'This is not a valid image';
+//                        }
                         return null;
 
                       },

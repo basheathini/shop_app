@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../views/product_detail_screen.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 class ProductItem extends StatelessWidget {
 
   @override
@@ -10,6 +11,7 @@ class ProductItem extends StatelessWidget {
 
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
 
     print('product rebuilds');
     //rounded corners wrapper
@@ -30,7 +32,7 @@ class ProductItem extends StatelessWidget {
               builder: (context, product, child) => IconButton(
                 icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border, color: Theme.of(context).accentColor,),
                 onPressed: () {
-                  product.isProductFavorite();
+                  product.isProductFavorite(auth.token, auth.userId);
                 },
               ),
             ),

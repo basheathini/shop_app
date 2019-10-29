@@ -22,13 +22,17 @@ class OrderItem{
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String authToken;
+  final String userId;
+
+  Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> addOrders(List<CartItem> cartProducts, double total) async{
-    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/orders.json";
+    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/orders/$userId.json?auth=$authToken";
     final timestamp = DateTime.now();
     
     final response = await http.post(url, body: json.encode({
@@ -52,7 +56,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchOrders() async {
-    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/orders.json";
+    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/orders/$userId.json?auth=$authToken";
     final response = await http.get(url);
     //print(json.decode(response.body));
 
@@ -62,11 +66,11 @@ class Orders with ChangeNotifier {
       return;
     }
     
-    extractedData.forEach((key_ids, values_orderData) {
-      loadedOrders.add(OrderItem(id: key_ids,
-          amount: values_orderData['amount'],
-          dateTime: DateTime.parse(values_orderData['dateTime']),
-          products: (values_orderData['products'] as List<dynamic>)
+    extractedData.forEach((keyIds, valuesOrderData) {
+      loadedOrders.add(OrderItem(id: keyIds,
+          amount: valuesOrderData['amount'],
+          dateTime: DateTime.parse(valuesOrderData['dateTime']),
+          products: (valuesOrderData['products'] as List<dynamic>)
               .map((item) => CartItem(
               id: item['id'],
               price: item['price'],

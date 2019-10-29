@@ -41,6 +41,11 @@ class Products with ChangeNotifier{
 //    )
   ];
 
+  final String authToken;
+  final String userId;
+
+  Products(this.authToken, this.userId, this._items);
+
   List<Product> get favoriteItems{
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
@@ -54,8 +59,9 @@ class Products with ChangeNotifier{
     return [..._items];
   }
 
-  Future<void> fetchProducts() async {
-    const url = "https://shopping-app-flutter-36ebb.firebaseio.com/products.json";
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url = 'https://shopping-app-flutter-36ebb.firebaseio.com/products.json?auth=$authToken&$filterString';
     try{
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -63,6 +69,11 @@ class Products with ChangeNotifier{
       if (extractedData == null){
         return;
       }
+
+      //getting user favorites
+      url = "https://shopping-app-flutter-36ebb.firebaseio.com/userFavorites/$userId.json?auth=$authToken";
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
 
 
       extractedData.forEach((key, value){
@@ -72,7 +83,7 @@ class Products with ChangeNotifier{
           title: value['title'],
           description: value['description'],
           price: value['price'],
-          isFavorite: value['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[key] ?? false,
           imageUrl: value['imageUrl'],
         ));
         _items = loadedProducts;
@@ -86,14 +97,15 @@ class Products with ChangeNotifier{
   }
 
   Future<void> addProduct(Product product) async {
-    const url = "https://shopping-app-flutter-36ebb.firebaseio.com/products.json";
+    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products.json?auth=$authToken";
     try{
       final response = await http.post(url, body: json.encode({
         'title': product.title,
         'description': product.description,
         'imageUrl': product.imageUrl,
         'price': product.price,
-        'isFavorite': product.isFavorite
+        'creatorId' : userId
+//        'isFavorite': product.isFavorite
       }),);
 
 //      print(json.decode(response.body));
@@ -124,7 +136,7 @@ class Products with ChangeNotifier{
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
 
     if(prodIndex >= 0){
-      final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id.json";
+      final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id.json?auth=$authToken";
       await http.patch(url, body: json.encode({
         'title': newProduct.title,
         'description': newProduct.description,
@@ -140,7 +152,7 @@ class Products with ChangeNotifier{
   }
 
   Future<void> deleteProduct(String id) async{
-    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id.json";
+    final url = "https://shopping-app-flutter-36ebb.firebaseio.com/products/$id.json?auth=$authToken";
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
