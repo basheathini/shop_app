@@ -12,6 +12,7 @@ import 'views/edit_add_product_screen.dart';
 import 'views/auth-screen.dart';
 import 'providers/auth.dart';
 import 'views/splash_screen.dart';
+import 'helpers/custom_route_helper.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,7 +38,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.green,
             accentColor: Colors.deepOrange,
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CustomPageTransitionBuilder() ,
+            TargetPlatform.iOS: CustomPageTransitionBuilder(),
+          })
         ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
         home: auth.isAuth ? ProductsOverviewScreen() : FutureBuilder(
