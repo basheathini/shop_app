@@ -21,10 +21,11 @@ class AuthScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
+//              color: Colors.white,
               gradient: LinearGradient(
                 colors: [
-                  Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
-                  Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                  Color.fromRGBO(255, 69, 0, 1),
+                  Color.fromRGBO(255, 140, 0, 1).withOpacity(0.9),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -212,20 +213,20 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
-      elevation: 5.0,
+      elevation: 4.0,
       //AnimatedBuilder(animation: _heightAnimation, builder: (ctx, ch) => replaced by AnimatedContainer which was just a Container
       //animatedContainer does not need to configure controller and animation
       child:  AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+//        height: _authMode == AuthMode.Signup ? 320 : 260,
         //height: _heightAnimation.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 300 : 200),
         //BoxConstraints(minHeight: _heightAnimation.value.height),
-        width: deviceSize.width * 0.75,
+        width: deviceSize.width * 0.80,
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -239,6 +240,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                   if (value.isEmpty || !value.contains('@')) {
                     return 'Invalid email!';
                   }
+                  return '';
                 },
                 onSaved: (value) {
                   _authData['email'] = value;
@@ -252,6 +254,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                   if (value.isEmpty || value.length < 5) {
                     return 'Password is too short!';
                   }
+                  return '';
                 },
                 onSaved: (value) {
                   _authData['password'] = value;
@@ -277,6 +280,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                        if (value != _passwordController.text) {
                          return 'Passwords do not match!';
                        }
+                       return '';
                      }
                          : null,
                    ),
@@ -284,34 +288,42 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                ),
              ),
               SizedBox(
-                height: 20,
+                height: 15,
               ),
               if (_isLoading)
                 CircularProgressIndicator()
               else
                 Container(
-                  width: deviceSize.width * 0.75,
+                  height: 48,
+                  width: deviceSize.width * 0.85,
                   child: RaisedButton(
                     child:
                     Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     padding:
                     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+//                    color: Colors.black,
                     color: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                 ),
-              FlatButton(
-                child: Text(
-                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                onPressed: _switchAuthMode,
-                padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textColor: Theme.of(context).primaryColor,
-              ),
+                FlatButton(
+                  child: Text("Don't have an account?",
+                    style: TextStyle(fontSize: 15, color: Colors.black,),
+
+                  ),
+                  onPressed: () {},)
+//              FlatButton(
+//                child: Text(
+//                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+//                onPressed: _switchAuthMode,
+//                padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+//                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+//                textColor: Theme.of(context).primaryColor,
+//              ),
             ],
           ),
         ),
