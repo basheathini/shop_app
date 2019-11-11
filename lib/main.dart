@@ -13,6 +13,7 @@ import 'views/auth-screen.dart';
 import 'providers/auth.dart';
 import 'views/splash_screen.dart';
 import 'helpers/custom_route_helper.dart';
+import 'views/user_registration_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
           OrdersScreen.routeName: (context) => OrdersScreen(),
           UserProductScreen.routeName: (context) => UserProductScreen(),
           EditAddProductScreen.routeName: (context) => EditAddProductScreen(),
-          ProductsOverviewScreen.routeName: (context) => ProductsOverviewScreen()
+          ProductsOverviewScreen.routeName: (context) => ProductsOverviewScreen(),
+          UserPersonalDetails.routeName: (context) => UserPersonalDetails()
         },
       ) ,),
     );

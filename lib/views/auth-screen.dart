@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../models/http_exceptions.dart';
+import '../views/user_registration_screen.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -315,7 +316,9 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     style: TextStyle(fontSize: 15, color: Colors.black,),
 
                   ),
-                  onPressed: () {},)
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(UserPersonalDetails.routeName);
+                  },)
 //              FlatButton(
 //                child: Text(
 //                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
