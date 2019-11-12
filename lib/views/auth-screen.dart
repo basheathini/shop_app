@@ -216,7 +216,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      elevation: 4.0,
+      elevation: 5.0,
       //AnimatedBuilder(animation: _heightAnimation, builder: (ctx, ch) => replaced by AnimatedContainer which was just a Container
       //animatedContainer does not need to configure controller and animation
       child:  AnimatedContainer(
@@ -227,7 +227,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 300 : 200),
         //BoxConstraints(minHeight: _heightAnimation.value.height),
-        width: deviceSize.width * 0.80,
+        width: deviceSize.width * 0.78,
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -295,30 +295,33 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                 CircularProgressIndicator()
               else
                 Container(
-                  height: 48,
-                  width: deviceSize.width * 0.85,
+                  height: 45,
+                  width: deviceSize.width * 0.99,
                   child: RaisedButton(
                     child:
                     Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     padding:
                     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
 //                    color: Colors.black,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).accentColor,
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                 ),
+                SizedBox(height: 8,),
+                //Text("Don't have an account?",style: TextStyle(fontSize: 15),),
+                SizedBox(height: 1,),
                 FlatButton(
-                  child: Text("Don't have an account?",
-                    style: TextStyle(fontSize: 15, color: Colors.black,),
-
-                  ),
-                  onPressed: () {
+                  child: Text('Don\'t have an account ? Sign Up.',
+                  style: TextStyle(fontSize: 15, color: Colors.black,),),
+                  onPressed: (){
                     Navigator.of(context).pushNamed(UserPersonalDetails.routeName);
-                  },)
+                  },
+
+              )
 //              FlatButton(
 //                child: Text(
 //                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),

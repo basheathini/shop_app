@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(builder: (ctx, auth, _) => MaterialApp(
         title: 'Shop app',
         theme: ThemeData(
-            primarySwatch: Colors.green,
-            accentColor: Colors.deepOrange,
+            primarySwatch: Colors.deepOrange,
+            accentColor: Colors.green,
             fontFamily: 'Lato',
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CustomPageTransitionBuilder() ,
