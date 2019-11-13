@@ -52,7 +52,7 @@ class Auth with ChangeNotifier{
   }
 
   Future<void> _authenticate(String email, String password, String urlSegment) async{
-    final url = "https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyAmhVjalO2Yb5Z8kPoEcUkd51bb4Q-KMGY";
+    final url = "https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyAYqzxLq4vA387KgOniRU5Y4uRXJQ9Fykg";
     try{
 
       final response = await http.post(url, body: json.encode({
@@ -61,6 +61,7 @@ class Auth with ChangeNotifier{
         'returnSecureToken': true,
       }));
       final responseData = json.decode(response.body);
+      print(responseData);
       if(responseData['error'] !=  null){
         throw HttpExceptions(responseData['error']['message']);
       }

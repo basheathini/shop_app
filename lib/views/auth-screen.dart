@@ -128,6 +128,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
 
 
   Future<void> _submit() async {
+    print(_formKey);
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -138,20 +139,22 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     });
 
     try{
-      if (_authMode == AuthMode.Login) {
-        // Log user in
-        await Provider.of<Auth>(context, listen: false)
-            .login(_authData['email'], _authData['password']);
-
-      } else {
-        // Sign user up
-        await Provider.of<Auth>(context, listen: false)
-            .signUp(_authData['email'], _authData['password']);
-
-
-        //Navigator.of(context).pushReplacementNamed('/products-overview');
-
-      }
+      await Provider.of<Auth>(context, listen: false)
+          .login(_authData['email'], _authData['password']);
+//      if (_authMode == AuthMode.Login) {
+//        // Log user in
+//        await Provider.of<Auth>(context, listen: false)
+//            .login(_authData['email'], _authData['password']);
+//
+//      } else {
+//        // Sign user up
+////        await Provider.of<Auth>(context, listen: false)
+////            .signUp(_authData['email'], _authData['password']);
+//
+//
+//        //Navigator.of(context).pushReplacementNamed('/products-overview');
+//
+//      }
 
     }on HttpExceptions catch(error){
 
@@ -182,20 +185,6 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     });
   }
 
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
-      setState(() {
-        _authMode = AuthMode.Signup;
-      });
-      _controller.forward();
-    } else {
-      setState(() {
-        _authMode = AuthMode.Login;
-      });
-      _controller.reverse();
-    }
-  }
-
   void _showErrorDialog(String message){
     showDialog(context: context, builder: (ctx) => AlertDialog(
       title: Text('An error occurred'),
@@ -206,7 +195,6 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
         },)
       ],
     ));
-
   }
 
   @override
@@ -217,16 +205,12 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
         borderRadius: BorderRadius.circular(8.0),
       ),
       elevation: 5.0,
-      //AnimatedBuilder(animation: _heightAnimation, builder: (ctx, ch) => replaced by AnimatedContainer which was just a Container
       //animatedContainer does not need to configure controller and animation
       child:  AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-//        height: _authMode == AuthMode.Signup ? 320 : 260,
-        //height: _heightAnimation.value.height,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 300 : 200),
-        //BoxConstraints(minHeight: _heightAnimation.value.height),
         width: deviceSize.width * 0.78,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -234,75 +218,42 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 15),
+                    decoration: InputDecoration(labelText: 'Username',icon: Icon(Icons.person)),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value.isEmpty || !value.contains('@')) {
+                        return 'Invalid email!';
+                      }
+                      },
+                    onSaved: (value) {
+                      _authData['email'] = 'bashe.athini@gmail.com';
+                      },
+                ),
                 TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Invalid email!';
-                  }
-                  return '';
-                },
-                onSaved: (value) {
-                  _authData['email'] = value;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value.isEmpty || value.length < 5) {
-                    return 'Password is too short!';
-                  }
-                  return '';
-                },
-                onSaved: (value) {
-                  _authData['password'] = value;
-                },
-              ),
-//              if (_authMode == AuthMode.Signup)
-             AnimatedContainer(
-               constraints: BoxConstraints(
-                   minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                   maxHeight:  _authMode == AuthMode.Signup ? 120 : 0),
-               duration: Duration(milliseconds: 300),
-               curve: Curves.easeIn,
-               child:  FadeTransition(
-                 opacity: _opacityAnimation,
-                 child: SlideTransition(
-                   position: _slideAnimation,
-                   child: TextFormField(
-                     enabled: _authMode == AuthMode.Signup,
-                     decoration: InputDecoration(labelText: 'Confirm Password'),
-                     obscureText: true,
-                     validator: _authMode == AuthMode.Signup
-                         ? (value) {
-                       if (value != _passwordController.text) {
-                         return 'Passwords do not match!';
-                       }
-                       return '';
-                     }
-                         : null,
-                   ),
-                 ),
-               ),
-             ),
-              SizedBox(
-                height: 15,
-              ),
-              if (_isLoading)
-                CircularProgressIndicator()
-              else
+                  decoration: InputDecoration(labelText: 'Password',icon: Icon(Icons.lock),),
+                  style: TextStyle(fontSize: 15),
+                  obscureText: true,
+                  controller: _passwordController,
+                  validator: (value) {
+                    if (value.isEmpty || value.length < 5) {
+                      return 'Password is too short!';
+                    }
+                    },
+                  onSaved: (value) {
+                  _authData['password'] = '0839954149Bash';
+                  },
+                ),
+                SizedBox(height: 15,),
                 Container(
-                  height: 45,
+                  height: 43,
                   width: deviceSize.width * 0.99,
                   child: RaisedButton(
-                    child:
-                    Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                    child: _isLoading ? Text('AUTHENTICATING...', style: TextStyle(fontSize: 12),) : Text('LOGIN', style: TextStyle(fontSize: 12),),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     padding:
                     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
@@ -312,24 +263,13 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                   ),
                 ),
                 SizedBox(height: 8,),
-                //Text("Don't have an account?",style: TextStyle(fontSize: 15),),
-                SizedBox(height: 1,),
                 FlatButton(
                   child: Text('Don\'t have an account ? Sign Up.',
-                  style: TextStyle(fontSize: 15, color: Colors.black,),),
+                  style: TextStyle(fontSize: 13, color: Colors.black,),),
                   onPressed: (){
                     Navigator.of(context).pushNamed(UserPersonalDetails.routeName);
                   },
-
               )
-//              FlatButton(
-//                child: Text(
-//                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-//                onPressed: _switchAuthMode,
-//                padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-//                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-//                textColor: Theme.of(context).primaryColor,
-//              ),
             ],
           ),
         ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/personal_information.dart';
+import '../widgets/contact_details.dart';
 class UserPersonalDetails extends StatefulWidget {
   static const routeName = '/user-registration';
   @override
@@ -7,13 +9,15 @@ class UserPersonalDetails extends StatefulWidget {
 
 class _UserPersonalDetailsState extends State<UserPersonalDetails> {
 
+  bool isPersonal = true;
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    final heightNeed = deviceSize.height - ((deviceSize.height / 100) * 30);
-    return Scaffold(
-      appBar: AppBar(title: Text('Sign Up'),),
-      body: Stack(
+    final heightNeed = deviceSize.height - ((deviceSize.height / 100) * 15);
+    return Container(
+//      appBar: AppBar(title: Text('Sign Up'),),
+      child: Stack(
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
@@ -42,39 +46,10 @@ class _UserPersonalDetailsState extends State<UserPersonalDetails> {
                     minHeight: heightNeed
                 ),
                 //BoxConstraints(minHeight: _heightAnimation.value.height),
-                width: deviceSize.width * 0.78,
+                width: deviceSize.width * 0.90,
                 padding: EdgeInsets.all(16.0),
-                child: Form(
-//                key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 35,),
-                        CircleAvatar(radius: 63,backgroundColor: Theme.of(context).primaryColor, backgroundImage: NetworkImage(""),),
-                        SizedBox(height: 48,),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: "Athini"),
-                          keyboardType: TextInputType.text,
-                        ),
-                        SizedBox(height: 8,),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: "Bashe"),
-                          keyboardType: TextInputType.text,
-                        ),
-                        SizedBox(height: 9,),
-                        TextFormField(
-                          enabled: false,
-                          decoration: InputDecoration(labelText: "South Africa, Western Cape, Cape Town"),
-                          keyboardType: TextInputType.text,
-                        ),
-                        SizedBox(height: 25,),
-                        FlatButton(
-                          child: Text("Next", style: TextStyle(fontSize: 14),),
-                        )
-                      ],
-                    ),
-                  ),
-                ),),
+                child: isPersonal ? PersonalInformation() : ContactDetails(),
+              ),
             ),
           )
         ],
