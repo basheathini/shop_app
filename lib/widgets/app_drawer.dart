@@ -3,6 +3,7 @@ import '../views/orders_screen.dart';
 import '../views/user_product_screen.dart';
 import '../providers/auth.dart';
 import 'package:provider/provider.dart';
+import '../views/square_payment_system_screen.dart';
 import '../helpers/custom_route_helper.dart';
 class AppDrawer extends StatelessWidget {
   @override
@@ -51,7 +52,7 @@ class AppDrawer extends StatelessWidget {
             ),
             title: Text('Payment'),
             onTap: (){
-              Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(PaymentSystem.routeName);
             },
           ),
 //          Divider(),

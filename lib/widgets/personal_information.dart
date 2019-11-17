@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../views/user_registration_screen.dart';
+import '../widgets/contact_details.dart';
 class PersonalInformation extends StatefulWidget {
+  static const routeName = '/personal-details';
   @override
   _PersonalInformationState createState() => _PersonalInformationState();
 }
@@ -49,7 +52,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 child:
                 Text('Next', style: TextStyle(fontSize: 12),),
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed('/products-overview');
+
+//                  UserPersonalDetails(false);
+                  Navigator.of(context).pushNamed(ContactDetails.routeName);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -65,7 +70,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
               onPressed: (){
                 Navigator.of(context).pop();
               },
-              child: Text("Have an account? Login.", style: TextStyle(fontSize: 13),),
+              child: Text("Already have an account? Login.", style: TextStyle(fontSize: 13),),
             )
           ],
         ),

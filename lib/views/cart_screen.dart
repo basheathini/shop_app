@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 import '../widgets/cart_item.dart';
 import '../providers/orders.dart';
+import '../views/square_payment_system_screen.dart';
+
+
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
   @override
@@ -58,13 +61,26 @@ class CartScreen extends StatelessWidget {
     );
   }
 }
+
+enum ApplePayStatus { success, fail, unknown }
 class OrderButton extends StatefulWidget {
+
+//  final bool applePayEnabled;
+//  final bool googlePayEnabled;
+//  final String squareLocationId;
+//  final String applePayMerchantId;
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+  GlobalKey<ScaffoldState>();
+
+
   const OrderButton({
     Key key,
     @required this.cart,
     }) : super(key: key);
 
   final Cart cart;
+
+
   @override
   _OrderButtonState createState() => _OrderButtonState();
 }
@@ -89,6 +105,8 @@ class _OrderButtonState extends State<OrderButton> {
         setState(() {
           _isLoading = false;
         });
+
+        Navigator.of(context).pushReplacementNamed(PaymentSystem.routeName);
 
         widget.cart.clearItems();
       },

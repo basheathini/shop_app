@@ -1,10 +1,12 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../models/http_exceptions.dart';
 import '../views/user_registration_screen.dart';
+import '../widgets/adpative_button.dart';
+import 'package:flutter/foundation.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -14,18 +16,42 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
+    return kIsWeb ? Scaffold(
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Container(
+              height: deviceSize.height,
+              width: deviceSize.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    flex: deviceSize.width > 600 ? 2 : 1,
+                    child: AuthCard(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ) :
+    Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/perfect.jpg'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center
+              ),
 //              color: Colors.white,
               gradient: LinearGradient(
                 colors: [
-                  Color.fromRGBO(255, 69, 0, 1),
+                  Color.fromRGBO(255, 69, 0, 1).withOpacity(0.9),
                   Color.fromRGBO(255, 140, 0, 1).withOpacity(0.9),
                 ],
                 begin: Alignment.topLeft,
@@ -42,36 +68,6 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-//                  Flexible(
-//                    child: Container(
-//                      margin: EdgeInsets.only(bottom: 20.0),
-//                      padding:
-//                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-//                      transform: Matrix4.rotationZ(-8 * pi / 180)
-//                        ..translate(-10.0),
-//                      // ..translate(-10.0),
-//                      decoration: BoxDecoration(
-//                        borderRadius: BorderRadius.circular(20),
-//                        color: Colors.deepOrange.shade900,
-//                        boxShadow: [
-//                          BoxShadow(
-//                            blurRadius: 8,
-//                            color: Colors.black26,
-//                            offset: Offset(0, 2),
-//                          )
-//                        ],
-//                      ),
-//                      child: Text(
-//                        'MyShop',
-//                        style: TextStyle(
-//                          color: Theme.of(context).accentTextTheme.title.color,
-//                          fontSize: 50,
-//                          fontFamily: 'Anton',
-//                          fontWeight: FontWeight.normal,
-//                        ),
-//                      ),
-//                    ),
-//                  ),
                   Flexible(
                     flex: deviceSize.width > 600 ? 2 : 1,
                     child: AuthCard(),
@@ -103,6 +99,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     'password': '',
   };
   var _isLoading = false;
+  var _doingState = 'SIGN IN';
   final _passwordController = TextEditingController();
   //flutter animations
   AnimationController _controller;
@@ -136,26 +133,12 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     _formKey.currentState.save();
     setState(() {
       _isLoading = true;
+      _doingState = 'AUTHENTICATING...';
     });
 
     try{
       await Provider.of<Auth>(context, listen: false)
           .login(_authData['email'], _authData['password']);
-//      if (_authMode == AuthMode.Login) {
-//        // Log user in
-//        await Provider.of<Auth>(context, listen: false)
-//            .login(_authData['email'], _authData['password']);
-//
-//      } else {
-//        // Sign user up
-////        await Provider.of<Auth>(context, listen: false)
-////            .signUp(_authData['email'], _authData['password']);
-//
-//
-//        //Navigator.of(context).pushReplacementNamed('/products-overview');
-//
-//      }
-
     }on HttpExceptions catch(error){
 
       var errorMessage = 'Authenication failed';
@@ -182,6 +165,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
 
     setState(() {
       _isLoading = false;
+      _doingState = 'SIGN IN';
     });
   }
 
@@ -202,16 +186,17 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(5.0),
       ),
-      elevation: 5.0,
+      elevation: 1.0,
       //animatedContainer does not need to configure controller and animation
       child:  AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 300 : 200),
-        width: deviceSize.width * 0.78,
+//        width: deviceSize.width * 0.80,
+        width: kIsWeb? 500 : deviceSize.width * 0.80,
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -224,7 +209,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value.isEmpty || !value.contains('@')) {
-                        return 'Invalid email!';
+                        return 'Invalid username!';
                       }
                       },
                     onSaved: (value) {
@@ -249,20 +234,9 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                 Container(
                   height: 43,
                   width: deviceSize.width * 0.99,
-                  child: RaisedButton(
-                    child: _isLoading ? Text('AUTHENTICATING...', style: TextStyle(fontSize: 12),) : Text('LOGIN', style: TextStyle(fontSize: 12),),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-//                    color: Colors.black,
-                    color: Theme.of(context).accentColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
-                  ),
+                  child: AdaptiveButton(_doingState,_submit,_isLoading)
                 ),
-                SizedBox(height: 8,),
+                SizedBox(height: 5,),
                 FlatButton(
                   child: Text('Don\'t have an account ? Sign Up.',
                   style: TextStyle(fontSize: 13, color: Colors.black,),),

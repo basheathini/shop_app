@@ -57,7 +57,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>{
     final productsContainer = Provider.of<Products>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Products'),
+//        title: Text('Products'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (filteringOptions selectedValue){

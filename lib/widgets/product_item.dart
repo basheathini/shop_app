@@ -13,7 +13,7 @@ class ProductItem extends StatelessWidget {
     final cart = Provider.of<Cart>(context, listen: false);
     final auth = Provider.of<Auth>(context, listen: false);
 
-    print('product rebuilds');
+//    print('product rebuilds');
     //rounded corners wrapper
     return ClipRRect(
         borderRadius: BorderRadius.circular(10),
