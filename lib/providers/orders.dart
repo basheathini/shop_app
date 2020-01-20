@@ -32,6 +32,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrders(List<CartItem> cartProducts, double total) async{
+    print(userId);
     final url = "https://shopping-app-flutter-36ebb.firebaseio.com/orders/$userId.json?auth=$authToken";
     final timestamp = DateTime.now();
     

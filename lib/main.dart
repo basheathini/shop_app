@@ -11,9 +11,11 @@ import 'views/user_product_screen.dart';
 import 'views/edit_add_product_screen.dart';
 import 'views/auth-screen.dart';
 import 'providers/auth.dart';
-import 'views/splash_screen.dart';
 import 'helpers/custom_route_helper.dart';
 import 'views/user_registration_screen.dart';
+import 'widgets/contact_details.dart';
+import 'widgets/personal_information.dart';
+import 'views/square_payment_system_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,8 +39,8 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(builder: (ctx, auth, _) => MaterialApp(
         title: 'Shop app',
         theme: ThemeData(
-            primarySwatch: Colors.green,
-            accentColor: Colors.deepOrange,
+            primarySwatch: Colors.blueGrey,
+            accentColor: Colors.green,
             fontFamily: 'Lato',
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CustomPageTransitionBuilder() ,
@@ -47,7 +49,7 @@ class MyApp extends StatelessWidget {
         ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
         home: auth.isAuth ? ProductsOverviewScreen() : FutureBuilder(
-          future : auth.autoLogin(), builder: (ctx, authResultSnapshot) => authResultSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
+          future : auth.autoLogin(), builder: (ctx, authResultSnapshot) => authResultSnapshot.connectionState == ConnectionState.waiting ? AuthScreen() : AuthScreen(),
         ),
         debugShowCheckedModeBanner: false,
         routes: {
@@ -57,7 +59,12 @@ class MyApp extends StatelessWidget {
           UserProductScreen.routeName: (context) => UserProductScreen(),
           EditAddProductScreen.routeName: (context) => EditAddProductScreen(),
           ProductsOverviewScreen.routeName: (context) => ProductsOverviewScreen(),
-          UserPersonalDetails.routeName: (context) => UserPersonalDetails()
+          UserPersonalDetails.routeName: (context) => UserPersonalDetails(),
+          ContactDetails.routeName: (context) => ContactDetails(),
+          PersonalInformation.routeName: (context) => PersonalInformation(),
+          AuthScreen.routeName: (context) => AuthScreen(),
+          PaymentSystem.routeName: (context) => PaymentSystem()
+
         },
       ) ,),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../views/edit_add_product_screen.dart';
 import '../providers/products.dart';
 import 'package:provider/provider.dart';
+
 class UserProductItem extends StatelessWidget {
   final String id;
   final String title;
