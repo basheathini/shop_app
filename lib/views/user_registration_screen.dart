@@ -14,10 +14,7 @@ class _UserPersonalDetailsState extends State<UserPersonalDetails> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Form(
-
-          )
-
+          Form()
         ],
       ),
 
